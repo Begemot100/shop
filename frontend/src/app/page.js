@@ -43,17 +43,14 @@ export default function Home() {
 
   return (
     <div
-      className="relative w-full min-h-screen overflow-hidden bg-black"
+      className="relative w-full min-h-screen overflow-hidden bg-black bg-cover bg-center bg-fixed sm:bg-contain"
       style={{
         backgroundImage: "url('/images/m.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundAttachment: "fixed",
       }}
     >
       {/* Логотип */}
       <motion.h1
-        className="fixed top-1/3 left-1/2 transform -translate-x-1/2 text-[10vw] md:text-[8vw] lg:text-[6vw] text-white font-thin tracking-wider mix-blend-difference"
+        className="fixed top-1/3 left-1/2 transform -translate-x-1/2 text-[10vw] sm:text-[12vw] md:text-[8vw] lg:text-[6vw] text-white font-thin tracking-wider mix-blend-difference"
         style={{ opacity: useTransform(scrollY, [0, 300], [1, 0]) }}
       >
         TRENDFORU
@@ -89,16 +86,16 @@ export default function Home() {
       </div>
 
       {/* Фиксированные кнопки навигации */}
-      <div className="fixed inset-0 flex justify-between items-start p-6 pointer-events-none">
-        <a href="/new" className="fixed top-5 left-5 text-white text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto">
+      <div className="fixed inset-0 flex justify-between items-start sm:flex-col md:flex-row p-6 pointer-events-none">
+        <a href="/new" className="fixed top-5 left-5 sm:top-1 sm:left-1 text-white text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto">
           NEW
         </a>
-        <a href="#" className="fixed top-5 right-5 text-white text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto">
+        <a href="#" className="fixed top-5 right-5 sm:top-1 sm:right-1 text-white text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto">
           BIO
         </a>
         <a
           href="#"
-          className="fixed bottom-5 left-5 text-white text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto"
+          className="fixed bottom-5 left-5 sm:bottom-1 sm:left-1 text-white text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto"
           onClick={(e) => {
             e.preventDefault();
             setIsModalOpen(true);
@@ -106,7 +103,7 @@ export default function Home() {
         >
           MY ACCOUNT
         </a>
-        <a href="#" className="fixed bottom-5 right-5 text-white text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto">
+        <a href="#" className="fixed bottom-5 right-5 sm:bottom-1 sm:right-1 text-white text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto">
           SALE
         </a>
       </div>
