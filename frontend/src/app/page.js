@@ -42,50 +42,6 @@ export default function Home() {
   }, []);
 
   return (
-"use client";
-import { useState, useEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import Image from "next/image";
-import RegisterModal from "../components/RegisterModal"; // Подключаем форму регистрации
-
-const images = [
-  "/images/nastya10.jpeg",
-  "/images/nastya20.jpeg",
-  "/images/nastya3.jpeg",
-  "/images/nastya4.jpeg",
-  "/images/nastya5.jpeg",
-  "/images/nastya6.jpeg",
-  "/images/nastya7.jpeg",
-  "/images/nastya8.jpeg",
-  "/images/nastya9.jpeg",
-  "/images/nastya10.jpeg",
-  "/images/nastya11.jpeg",
-  "/images/nastya12.jpeg",
-  "/images/nastya13.jpeg",
-  "/images/nastya14.jpeg",
-  "/images/nastya15.jpeg",
-  "/images/nastya16.jpeg",
-  "/images/nastya17.jpeg",
-  "/images/nastya1.jpeg",
-  "/images/nastya19.jpeg",
-  "/images/nastya2.jpeg",
-];
-
-export default function Home() {
-  const { scrollY } = useScroll();
-  const [imageData, setImageData] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Стейт для модального окна
-
-  useEffect(() => {
-    const generatedData = images.map(() => ({
-      left: Math.random() * 20 + 10, // Увеличьте разброс по горизонтали
-      size: Math.random() * (500 - 100) + 300, // Уменьшите размер фото
-      yStart: 100 + Math.random() * 100, // Начальная позиция фото
-    }));
-    setImageData(generatedData);
-  }, []);
-
-  return (
     <div
       className="relative w-full min-h-screen overflow-hidden bg-black"
       style={{
@@ -159,6 +115,4 @@ export default function Home() {
       <RegisterModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
-}  );
 }
-//1
