@@ -43,9 +43,12 @@ export default function Home() {
 
   return (
     <div
-      className="relative w-full min-h-screen overflow-hidden bg-black bg-cover bg-center sm:bg-contain"
+      className="relative w-full min-h-screen overflow-hidden bg-black"
       style={{
-        backgroundImage: "url('/images/m1.jpg')", // Фон для мобильных устройств
+        backgroundImage: "url('/images/m.jpg')",
+        backgroundSize: "cover", // Для десктопа
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed", // Для десктопа
       }}
     >
       {/* Логотип */}
@@ -113,3 +116,4 @@ export default function Home() {
     </div>
   );
 }
+//1
