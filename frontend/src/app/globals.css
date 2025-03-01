@@ -45,3 +45,10 @@ body {
 #__next-build-watcher {
   display: none !important;
 }
+@media (max-width: 640px) {
+  .background-container {
+    background-image: url('/images/m1.jpg'); /* Фон для мобильных устройств */
+    background-size: contain; /* Подгонка фона под экран */
+    background-attachment: scroll; /* Отключаем параллакс для мобильных */
+  }
+}
