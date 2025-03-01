@@ -1,0 +1,68 @@
+/* Основные стили для заголовка */
+.newCollectionTitle {
+  font-family: 'Roboto', sans-serif; /* Используем шрифт Roboto */
+  font-size: 4rem; /* Размер шрифта */
+  font-weight: bold; /* Жирный шрифт */
+  text-transform: uppercase; /* Все буквы заглавные */
+  background: linear-gradient(45deg, #ff6b6b, #f06595); /* Градиентный фон */
+  -webkit-background-clip: text; /* Применяем градиент только к тексту */
+  -webkit-text-fill-color: transparent; /* Делаем текст прозрачным */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Тень текста */
+  text-align: center; /* Выравнивание по центру */
+  margin: 0; /* Убираем отступы */
+}
+
+/* Контейнер для заголовка и декоративных линий */
+.newCollectionHeader {
+  display: flex;
+  align-items: center; /* Выравниваем элементы по вертикали */
+  justify-content: center; /* Выравниваем по горизонтали */
+  gap: 20px; /* Расстояние между линиями и текстом */
+  margin-bottom: 40px; /* Отступ снизу */
+}
+
+/* Стили для декоративных линий */
+.decorativeLine {
+  width: 100px; /* Ширина линии */
+  height: 2px; /* Высота линии */
+  background: linear-gradient(90deg, #ff6b6b, #f06595); /* Градиент для линии */
+  flex-shrink: 0; /* Запрещаем сжатие линий */
+}
+
+/* Анимация для заголовка */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px); /* Начальное положение (смещение вверх) */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); /* Конечное положение */
+  }
+}
+
+/* Применяем анимацию к заголовку */
+.newCollectionTitle {
+  animation: fadeIn 1.5s ease-in-out; /* Длительность и плавность анимации */
+}
+
+/* Дополнительные стили для адаптивности */
+@media (max-width: 768px) {
+  .newCollectionTitle {
+    font-size: 3rem; /* Уменьшаем размер шрифта на мобильных устройствах */
+  }
+
+  .decorativeLine {
+    width: 50px; /* Уменьшаем длину линий на мобильных устройствах */
+  }
+}
+
+@media (max-width: 480px) {
+  .newCollectionTitle {
+    font-size: 2rem; /* Еще меньше размер шрифта для очень маленьких экранов */
+  }
+
+  .decorativeLine {
+    width: 30px; /* Еще короче линии */
+  }
+}

@@ -1,0 +1,47 @@
+/* 1️⃣ Импорт Google Fonts (должен быть в самом верху) */
+@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;700&display=swap");
+
+/* 2️⃣ Импорт Tailwind */
+@import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 3️⃣ Темные и светлые переменные */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+/* 4️⃣ Общие стили */
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* 5️⃣ Основные шрифты */
+.font-logo {
+  font-family: "Bodoni Moda", serif;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.font-modern {
+  font-family: "Geist", sans-serif;
+}
+
+.font-mono {
+  font-family: "Geist Mono", monospace;
+}
+#__next-build-watcher {
+  display: none !important;
+}
