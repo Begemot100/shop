@@ -73,7 +73,6 @@ def login():
     else:
         return jsonify({"error": "Неверный email или пароль"}), 401
 
-
 @app.route('/api/auth/_log', methods=['POST'])
 def log_activity():
     try:
