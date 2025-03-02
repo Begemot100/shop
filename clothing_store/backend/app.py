@@ -56,11 +56,11 @@ def register():
     return jsonify({"message": "Регистрация успешна!"}), 201
 
 # Логин пользователя
-@app.route("/api/login", methods=["POST"])
+@app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()  # Получаем данные в формате JSON
-    email = data.get("email")
-    password = data.get("password")
+    email = data.get('email')
+    password = data.get('password')
 
     user = User.query.filter_by(email=email).first()
 
@@ -106,14 +106,14 @@ def logout():
     logout_user()
     return jsonify({"message": "Вы вышли из системы"}), 200
 
-@app.route('/api/auth/session', methods=['GET'])
-@login_required  # Убедитесь, что только авторизованные пользователи могут получить доступ к сессии
-def get_session():
-    return jsonify({
-        'user_id': current_user.id,
-        'user_email': current_user.email,
-        'message': 'Session active'
-    }), 200
+# @app.route('/api/auth/session', methods=['GET'])
+# @login_required  # Убедитесь, что только авторизованные пользователи могут получить доступ к сессии
+# def get_session():
+#     return jsonify({
+#         'user_id': current_user.id,
+#         'user_email': current_user.email,
+#         'message': 'Session active'
+#     }), 200
 
 # Панель администратора
 @app.route("/admin")
