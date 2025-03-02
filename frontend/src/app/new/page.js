@@ -25,7 +25,13 @@ export default function NewCollection() {
             headers: { "Content-Type": "application/json" },
         });
 
-      const text = await response.text();
+        if (!response.ok) {
+            console.error("Ошибка на сервере:", response.status, response.statusText);
+            return;
+        }
+
+        const data = await response.json();
+        console.log(data);
       try {
         const data = JSON.parse(text);
         console.log("Данные с сервера:", data);
