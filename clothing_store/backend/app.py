@@ -141,7 +141,6 @@ def get_products():
     products = Product.query.all()
     return jsonify([{"id": p.id, "name": p.name, "price": p.price, "image": p.image} for p in products])
 
-# Получить новые товары
 @app.route('/api/products/new', methods=['GET'])
 def get_new_products():
     try:

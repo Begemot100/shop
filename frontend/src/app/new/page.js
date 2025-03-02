@@ -1,52 +1,14 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { motion, useAnimation } from "framer-motion"; // Импортируем Framer Motion
-import styles from './NewCollection.module.css';
+import { motion } from "framer-motion"; // Импортируем Framer Motion
 
 export default function NewCollection() {
   const [products, setProducts] = useState([]);
   const router = useRouter();
-  const controls = useAnimation(); // Управление анимациями
 
-  useEffect(() => {
-    async function fetchProducts() {
-      const data = await fetchNewCollection();
-      if (data) setProducts(data);
-    }
-    fetchProducts();
-  }, []);
-
-  const fetchNewCollection = async () => {
-    try {
-        const response = await fetch("https://shop-production-3be1.up.railway.app/api/products/new", {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-        });
-
-        if (!response.ok) {
-            console.error("Ошибка на сервере:", response.status, response.statusText);
-            return;
-        }
-
-        const data = await response.json();
-        console.log(data);
-      try {
-        const data = JSON.parse(text);
-        console.log("Данные с сервера:", data);
-        return data;
-      } catch (error) {
-        console.error("Ошибка при разборе JSON. Получен ответ:", text, error);
-        return null;
-      }
-    } catch (error) {
-      console.error("Ошибка сети:", error);
-      return null;
-    }
-  };
-
-  // Анимация для карточек
+  // Анимации для карточек
   const cardVariants = {
     hidden: { opacity: 0, y: 50, scale: 0.9 }, // Начальное состояние (невидимо, смещено вниз и уменьшено)
     visible: { opacity: 1, y: 0, scale: 1 }, // Конечное состояние (видимо, на месте и нормального размера)
@@ -62,6 +24,36 @@ export default function NewCollection() {
   const titleVariants = {
     hidden: { opacity: 0, y: -20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+  };
+
+  useEffect(() => {
+    async function fetchProducts() {
+      const data = await fetchNewCollection();
+      if (data) setProducts(data);
+    }
+    fetchProducts();
+  }, []);
+
+  // Функция для загрузки новых продуктов
+  const fetchNewCollection = async () => {
+    try {
+      const response = await fetch("https://shop-production-3be1.up.railway.app/api/products/new", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        console.error("Ошибка на сервере:", response.status, response.statusText);
+        return;
+      }
+
+      const data = await response.json();
+      console.log("Данные с сервера:", data);
+      return data;
+    } catch (error) {
+      console.error("Ошибка сети:", error);
+      return null;
+    }
   };
 
   return (
