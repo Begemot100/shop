@@ -95,29 +95,32 @@ def get_products():
     products = models.Product.query.all()
     return jsonify([{"id": p.id, "name": p.name, "price": p.price, "image": p.image} for p in products])
 
-@app.route("/api/products/new", methods=["GET"])
+@app.route('/api/products/new', methods=['GET'])
 def get_new_products():
     try:
-        # Fetch new products where is_new is True
-        new_products = Product.query.filter_by(is_new=True).all()
+        # Запрос к базе данных для получения новых товаров
+        new_products = Product.query.filter_by(is_new=1).all()  # Получаем новые товары
+        products = []
 
-        # Print the fetched products to check the result
-        print("Fetched products:", new_products)
+        # Если товары найдены, формируем список
+        for product in new_products:
+            products.append({
+                'id': product.id,
+                'name': product.name,
+                'price': product.price,
+                'image': product.image,
+                'is_new': product.is_new
+            })
 
-        # If no products found, return an appropriate message
-        if not new_products:
+        # Если товары не найдены, возвращаем сообщение
+        if not products:
             return jsonify({"message": "No new products found."}), 404
 
-        # Return the list of new products
-        return jsonify([{
-            "id": p.id,
-            "name": p.name,
-            "price": p.price,
-            "image": p.image,
-            "is_new": p.is_new
-        } for p in new_products])
+        # Возвращаем данные в формате JSON
+        return jsonify(products)
 
     except Exception as e:
+        # Обработка ошибок при выполнении запроса
         return jsonify({"error": str(e)}), 500
 
 
