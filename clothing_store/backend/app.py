@@ -34,11 +34,11 @@ import models
 with app.app_context():
     db.create_all()
 
-# Регистрация нового пользователя
 @app.route("/api/register", methods=["POST"])
 def register():
     data = request.get_json()
 
+    # Проверьте данные
     if not data or not data.get("name") or not data.get("email") or not data.get("password"):
         return jsonify({"error": "Все поля обязательны"}), 400
 
@@ -49,11 +49,13 @@ def register():
     hashed_password = bcrypt.generate_password_hash(data["password"]).decode("utf-8")
     new_user = User(name=data["name"], email=data["email"], password=hashed_password)
 
-    with app.app_context():
+    try:
         db.session.add(new_user)
         db.session.commit()
-
-    return jsonify({"message": "Регистрация успешна!"}), 201
+        return jsonify({"message": "Регистрация успешна!"}), 201
+    except Exception as e:
+        print(f"Ошибка при сохранении пользователя: {str(e)}")
+        return jsonify({"error": "Ошибка сервера"}), 500
 
 # Логин пользователя
 @app.route('/api/login', methods=['POST'])
