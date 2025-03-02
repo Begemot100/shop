@@ -58,14 +58,14 @@ def register():
 # Логин пользователя
 @app.route("/api/login", methods=["POST"])
 def login():
-    data = request.get_json()
+    data = request.get_json()  # Получаем данные в формате JSON
     email = data.get("email")
     password = data.get("password")
 
     user = User.query.filter_by(email=email).first()
 
-    if user and bcrypt.check_password_hash(user.password, password):
-        login_user(user)
+    if user and bcrypt.check_password_hash(user.password, password):  # Проверяем пароль
+        login_user(user)  # Входим в систему
         if user.is_admin():
             return jsonify({"message": "Добро пожаловать в админку!", "redirect": "/admin"}), 200
         else:
