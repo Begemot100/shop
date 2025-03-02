@@ -5,17 +5,18 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, cur
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 import os
+from models import User, Product, db
 
 # Инициализация приложения
 app = Flask(__name__)
 
 # Конфигурация для PostgreSQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://username:password@nozomi.proxy.rlwy.net:47023/Postgres-OQP9'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:gYYcSjYNpYYvpmNvsMaVgpnSupkjrhzS@nozomi.proxy.rlwy.net:47023/railway'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['SECRET_KEY'] = 'your_secret_key'  # Для безопасности
 
 # Инициализация необходимых расширений
-db = SQLAlchemy(app)
+db.init_app(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -26,9 +27,8 @@ migrate = Migrate(app, db)
 
 # Импортируем модели после инициализации db
 import models
-from models import User, Product, db
 
-db.init_app(app)
+# db.init_app(app)
 
 # Создание всех таблиц, если они еще не созданы
 with app.app_context():
