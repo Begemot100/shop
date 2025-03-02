@@ -13,7 +13,7 @@ app = Flask(__name__)
 # Конфигурация для PostgreSQL
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:gYYcSjYNpYYvpmNvsMaVgpnSupkjrhzS@nozomi.proxy.rlwy.net:47023/railway'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config['SECRET_KEY'] = 'your_secret_key'  # Для безопасности
+app.config['SECRET_KEY'] = '5005'  # Для безопасности
 
 # Инициализация необходимых расширений
 db.init_app(app)
