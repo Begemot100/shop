@@ -5,7 +5,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, cur
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 import os
-from models import User, Product, db
+from models import User, Product, ActivityLog, db
 
 # Инициализация приложения
 app = Flask(__name__)
