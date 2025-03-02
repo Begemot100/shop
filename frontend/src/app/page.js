@@ -31,8 +31,14 @@ export default function Home() {
   const { scrollY } = useScroll();
   const [imageData, setImageData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // Стейт для модального окна
+  const [user, setUser] = useState(null);  // Стейт для пользователя
 
   useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+
     const generatedData = images.map(() => ({
       left: Math.random() * 20 + 10, // Увеличьте разброс по горизонтали
       size: Math.random() * (500 - 100) + 300, // Уменьшите размер фото
@@ -40,6 +46,11 @@ export default function Home() {
     }));
     setImageData(generatedData);
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+  };
 
   return (
     <div
@@ -104,7 +115,7 @@ export default function Home() {
             setIsModalOpen(true);
           }}
         >
-          MY ACCOUNT
+          {user ? `Добро пожаловать, ${user.name}` : "Мой аккаунт"}
         </a>
         <a href="#" className="fixed bottom-5 right-5 sm:bottom-1 sm:right-1 text-white text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto">
           SALE

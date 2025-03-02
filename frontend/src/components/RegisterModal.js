@@ -1,6 +1,7 @@
+"use client";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; // Импортируем роутер
 
 export default function RegisterModal({ isOpen, onClose }) {
   if (!isOpen) return null;
@@ -11,43 +12,37 @@ export default function RegisterModal({ isOpen, onClose }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
-    setIsSubmitting(true);
 
-    // Prevent multiple submissions
     const url = isLogin ? "/api/login" : "/api/register";
     const userData = isLogin ? { email, password } : { name, email, password };
 
     try {
-      const response = await fetch("https://shop-production-3be1.up.railway.app/api/register", {
+      const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
-        timeout: 10000,
       });
 
       const data = await response.json();
       if (response.ok) {
         setMessage("✅ Успешно!");
 
-        // Store user data securely (avoid raw passwords)
+        // Сохраняем пользователя в localStorage
         localStorage.setItem("user", JSON.stringify({ name, email }));
 
         setTimeout(() => {
-          onClose(); // Close modal
-          router.push("/dashboard"); // Redirect to user dashboard
+          onClose(); // Закрываем модалку
+          router.push("/"); // Редирект на главную страницу
         }, 1000);
       } else {
         setMessage(`❌ Ошибка: ${data.error || "Попробуйте снова"}`);
       }
     } catch (error) {
       setMessage("❌ Ошибка сервера");
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -77,7 +72,7 @@ export default function RegisterModal({ isOpen, onClose }) {
             }`}
             onClick={() => setIsLogin(false)}
           >
-            Registration
+            Регистрация
           </button>
           <button
             className={`text-lg font-semibold ${
@@ -85,7 +80,7 @@ export default function RegisterModal({ isOpen, onClose }) {
             }`}
             onClick={() => setIsLogin(true)}
           >
-            Login
+            Вход
           </button>
         </div>
 
@@ -132,7 +127,6 @@ export default function RegisterModal({ isOpen, onClose }) {
             <button
               type="submit"
               className="bg-white text-black font-semibold px-6 py-2 rounded-md hover:bg-gray-300 transition-all"
-              disabled={isSubmitting}
             >
               {isLogin ? "Войти" : "Зарегистрироваться"}
             </button>
