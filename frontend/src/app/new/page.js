@@ -1,77 +1,53 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion"; // Импортируем Framer Motion
+import styles from './NewCollection.module.css';
 
 export default function NewCollection() {
-  const [products, setProducts] = useState([]);
+  const [newProducts, setNewProducts] = useState([]);
+  const [error, setError] = useState("");
   const router = useRouter();
 
-  // Анимации для карточек
+  useEffect(() => {
+    const fetchNewProducts = async () => {
+      try {
+        const response = await fetch("https://shop-production-3be1.up.railway.app/api/products/new");
+
+        if (!response.ok) {
+          console.error("Ошибка на сервере:", response.status, response.statusText);
+          throw new Error('Ошибка при загрузке данных с сервера');
+        }
+
+        const data = await response.json();
+        setNewProducts(data); // Сохраняем данные продуктов в состояние
+      } catch (err) {
+        console.error("Ошибка при запросе данных:", err);
+        setError("Не удалось загрузить новые продукты.");
+      }
+    };
+
+    fetchNewProducts(); // Вызываем функцию при монтировании компонента
+  }, []);
+
   const cardVariants = {
     hidden: { opacity: 0, y: 50, scale: 0.9 }, // Начальное состояние (невидимо, смещено вниз и уменьшено)
     visible: { opacity: 1, y: 0, scale: 1 }, // Конечное состояние (видимо, на месте и нормального размера)
   };
 
-  // Анимация для кнопки
   const buttonVariants = {
     hover: { scale: 1.05, backgroundColor: "#dc2626" }, // Эффект при наведении
     tap: { scale: 0.95 }, // Эффект при нажатии
   };
 
-  // Анимация для заголовка
   const titleVariants = {
     hidden: { opacity: 0, y: -20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
   };
 
-  useEffect(() => {
-    async function fetchProducts() {
-      const data = await fetchNewCollection();
-      if (data) setProducts(data);
-    }
-    fetchProducts();
-  }, []);
-
-  // Функция для загрузки новых продуктов
-  const fetchNewCollection = async () => {
-    try {
-      const response = await fetch("https://shop-production-3be1.up.railway.app/api/products/new", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      // Проверка успешности ответа
-      if (!response.ok) {
-        console.error(`Ошибка на сервере: ${response.status} - ${response.statusText}`);
-        return null;
-      }
-
-      // Попытка получить данные в формате JSON
-      try {
-        const data = await response.json();
-
-        // Проверка на корректность данных
-        if (Array.isArray(data)) {
-          return data;
-        } else {
-          console.error("Неверный формат данных:", data);
-          return null;
-        }
-      } catch (error) {
-        console.error("Ошибка при парсинге JSON:", error);
-        return null;
-      }
-    } catch (error) {
-      console.error("Ошибка сети:", error);
-      return null; // Возвращаем null в случае ошибки сети
-    }
-  };
-
   return (
     <div className="min-h-screen bg-black text-white p-10">
-      {/* Анимация заголовка */}
       <motion.h1
         className="text-4xl font-bold text-center mb-10"
         variants={titleVariants}
@@ -82,8 +58,9 @@ export default function NewCollection() {
       </motion.h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.length > 0 ? (
-          products.map((product, index) => (
+        {error && <p className="text-center text-red-500">{error}</p>}
+        {newProducts.length > 0 ? (
+          newProducts.map((product, index) => (
             <motion.div
               key={product.id}
               variants={cardVariants}
