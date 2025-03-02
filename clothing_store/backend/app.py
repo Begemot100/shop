@@ -88,6 +88,16 @@ def admin_panel():
         return jsonify({"error": "Доступ запрещен"}), 403
     return jsonify({"message": "Добро пожаловать в админку!"}), 200
 
+@app.route('/api/auth/session', methods=['GET'])
+def get_session():
+    if current_user.is_authenticated:
+        return jsonify({
+            'id': current_user.id,
+            'name': current_user.name,
+            'email': current_user.email
+        })
+    return jsonify({'message': 'No active session'}), 401
+
 # Получить все товары
 @app.route("/api/products", methods=["GET"])
 def get_products():
