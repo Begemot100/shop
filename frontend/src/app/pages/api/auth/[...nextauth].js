@@ -1,39 +1,33 @@
-import NextAuth from "next-auth";
-import Providers from "next-auth/providers";
+// /pages/api/auth/[...nextauth].js
+import NextAuth from "next-auth"
+import Providers from "next-auth/providers"
 
 export default NextAuth({
   providers: [
-    Providers.Credentials({
-      name: "Credentials",
-      credentials: {
-        username: { label: "Username", type: "text" },
-        password: { label: "Password", type: "password" },
-      },
-      authorize: async (credentials) => {
-        // Простая проверка логина и пароля
-        if (
-          credentials.username === "admin" &&
-          credentials.password === "admin123"
-        ) {
-          return { id: 1, name: "Admin" };
-        }
-        return null;
-      },
+    Providers.Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
+    // Добавьте другие провайдеры, если нужно
   ],
   session: {
-    jwt: true,
+    jwt: true,  // Используем JWT для сессий
   },
   callbacks: {
     async jwt(token, user) {
       if (user) {
-        token.id = user.id;
+        token.id = user.id
+        token.email = user.email
       }
-      return token;
+      return token
     },
     async session(session, token) {
-      session.user.id = token.id;
-      return session;
-    },
+      session.user.id = token.id
+      session.user.email = token.email
+      return session
+    }
   },
-});
+  pages: {
+    signIn: '/auth/signin', // Убедитесь, что путь к странице входа верный
+  }
+})

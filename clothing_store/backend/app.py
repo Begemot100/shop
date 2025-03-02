@@ -2,17 +2,17 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user, logout_user
-
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 import os
 
 app = Flask(__name__)
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://username:password@nozomi.proxy.rlwy.net:47023/Postgres-OQP9'
-# app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(BASE_DIR, 'instance', 'store.db')}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config['SECRET_KEY'] = 'your_secret_key'
+
+db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -21,6 +21,7 @@ login_manager.login_view = "login"
 CORS(app)
 # db = SQLAlchemy(app)
 # db.init_app(app)
+migrate = Migrate(app, db)
 
 # Импортируем модели после инициализации db
 import models
@@ -29,10 +30,11 @@ from models import User, Product, db
 db.init_app(app)
 with app.app_context():
     db.create_all()
-migrate = Migrate(app, db)  # 🔥 Подключаем Flask-Migrate
+# migrate = Migrate(app, db)  # 🔥 Подключаем Flask-Migrate
 
 
 
+# Маршрут для регистрации
 @app.route("/api/register", methods=["POST"])
 def register():
     data = request.get_json()
@@ -60,6 +62,7 @@ def register():
 
     return jsonify({"message": "Регистрация успешна!"}), 201
 
+# Маршрут для логина
 @app.route("/login", methods=["POST"])
 def login():
     data = request.get_json()  # Получаем данные в формате JSON
@@ -77,12 +80,14 @@ def login():
     else:
         return jsonify({"error": "Неверный email или пароль"}), 401
 
+# Маршрут для логаута
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()  # Выход из системы
     return jsonify({"message": "Вы вышли из системы"}), 200
 
+# Маршрут для панели администратора
 @app.route("/admin")
 @login_required
 def admin_panel():
@@ -90,16 +95,20 @@ def admin_panel():
         return jsonify({"error": "Доступ запрещен"}), 403
     return jsonify({"message": "Добро пожаловать в админку!"}), 200
 
+# Маршрут для получения всех товаров
 @app.route("/api/products", methods=["GET"])
 def get_products():
-    products = models.Product.query.all()
+    products = Product.query.all()
     return jsonify([{"id": p.id, "name": p.name, "price": p.price, "image": p.image} for p in products])
 
+
+
+# Маршрут для получения новых товаров
 @app.route('/api/products/new', methods=['GET'])
 def get_new_products():
     try:
         # Запрос к базе данных для получения новых товаров
-        new_products = Product.query.filter_by(is_new=1).all()  # Получаем новые товары
+        new_products = Product.query.filter_by(is_new=True).all()  # Получаем новые товары
         products = []
 
         # Если товары найдены, формируем список
@@ -125,6 +134,7 @@ def get_new_products():
 
 
 
+# Загрузка пользователя для Flask-Login
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
