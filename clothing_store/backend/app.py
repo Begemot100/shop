@@ -98,7 +98,7 @@ def log_activity():
         print(f"❌ Ошибка при логировании: {str(e)}")
         return jsonify({"error": "Ошибка сервера"}), 500
 
-
+# 1
 # Логаут
 @app.route("/logout")
 @login_required
