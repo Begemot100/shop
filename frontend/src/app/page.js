@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import RegisterModal from "../components/RegisterModal"; // Подключаем форму регистрации
 
 const images = [
@@ -29,9 +30,10 @@ const images = [
 
 export default function Home() {
   const { scrollY } = useScroll();
+  const router = useRouter();
   const [imageData, setImageData] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Стейт для модального окна
-  const [user, setUser] = useState(null);  // Стейт для пользователя
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
@@ -40,9 +42,9 @@ export default function Home() {
     }
 
     const generatedData = images.map(() => ({
-      left: Math.random() * 20 + 10, // Увеличьте разброс по горизонтали
-      size: Math.random() * (500 - 100) + 300, // Уменьшите размер фото
-      yStart: 100 + Math.random() * 100, // Начальная позиция фото
+      left: Math.random() * 20 + 10,
+      size: Math.random() * (600 - 100) + 500,
+      yStart: 100 + Math.random() * 100,
     }));
     setImageData(generatedData);
   }, []);
@@ -56,10 +58,10 @@ export default function Home() {
     <div
       className="relative w-full min-h-screen overflow-hidden bg-black"
       style={{
-        backgroundImage: "url('/images/m.jpg')", // Для десктопа
-        backgroundSize: "cover", // Для всех устройств
+        backgroundImage: "url('/images/m.jpg')",
+        backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundAttachment: "fixed", // Для десктопа
+        backgroundAttachment: "fixed",
       }}
     >
       {/* Логотип */}
@@ -78,7 +80,7 @@ export default function Home() {
               key={index}
               className="absolute rounded-lg overflow-hidden shadow-lg"
               style={{
-                top: `${index * 150 + 100}vh`, // Уменьшите расстояние между фото
+                top: `${index * 100 + 50}vh`,
                 left: `${imageData[index].left}vw`,
                 width: `${imageData[index].size}px`,
                 height: `${imageData[index].size}px`,
@@ -86,7 +88,7 @@ export default function Home() {
               initial={{ opacity: 0, y: imageData[index].yStart }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false, amount: 0.1 }}
-              transition={{ duration: 3.5, delay: index * 0.3 }} // Уменьшите задержку
+              transition={{ duration: 3.5, delay: index * 0.3 }}
             >
               <Image
                 src={src}
@@ -101,25 +103,48 @@ export default function Home() {
 
       {/* Фиксированные кнопки навигации */}
       <div className="fixed inset-0 flex justify-between items-start sm:flex-col md:flex-row p-6 pointer-events-none">
-        <a href="/new" className="fixed top-5 left-5 sm:top-1 sm:left-1 text-white text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto">
+        <a
+          href="/new"
+          className="fixed top-5 left-5 sm:top-1 sm:left-1 text-white text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto"
+        >
           NEW
         </a>
-        <a href="#" className="fixed top-5 right-5 sm:top-1 sm:right-1 text-white text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto">
+        <a
+          href="#"
+          className="fixed top-5 right-5 sm:top-1 sm:right-1 text-white text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto"
+        >
           BIO
         </a>
         <a
           href="#"
-          className="fixed bottom-5 left-5 sm:bottom-1 sm:left-1 text-white text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto"
-          onClick={(e) => {
-            e.preventDefault();
-            setIsModalOpen(true);
-          }}
+          className="fixed bottom-5 right-5 sm:bottom-1 sm:right-1 text-white text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto"
         >
-          {user ? `Добро пожаловать, ${user.name}` : "Мой аккаунт"}
-        </a>
-        <a href="#" className="fixed bottom-5 right-5 sm:bottom-1 sm:right-1 text-white text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto">
           SALE
         </a>
+      </div>
+
+      {/* Кнопка "MY ACCOUNT" */}
+      <div className="fixed bottom-5 left-5 sm:bottom-1 sm:left-1 text-white text-xl font-bold uppercase tracking-widest pointer-events-auto">
+        {user ? (
+          <div className="flex flex-col items-start gap-2">
+            <button
+              onClick={() => router.push("/profile")}
+              className="hover:underline"
+            >
+              MY ACCOUNT
+            </button>
+            <button
+              onClick={handleLogout}
+              className="text-gray-400 hover:underline"
+            >
+
+            </button>
+          </div>
+        ) : (
+          <button onClick={() => setIsModalOpen(true)} className="hover:underline">
+            MY ACCOUNT
+          </button>
+        )}
       </div>
 
       {/* Модальное окно регистрации */}

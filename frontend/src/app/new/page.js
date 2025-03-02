@@ -3,103 +3,169 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import styles from './NewCollection.module.css';
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { ShoppingCart } from "lucide-react";
 
 export default function NewCollection() {
-  const [newProducts, setNewProducts] = useState([]);
-  const [error, setError] = useState("");
+  const [newProducts, setNewProducts] = useState([
+    {
+      id: 1,
+      name: "Куртка белая",
+      price: 99.99,
+      images: ["nastya1.jpeg", "nastya2.jpeg", "nastya3.jpeg"],
+    },
+    {
+      id: 2,
+      name: "Куртка черная",
+      price: 89.99,
+      images: ["nastya4.jpeg", "nastya5.jpeg", "nastya6.jpeg"],
+    },
+    {
+      id: 3,
+      name: "Куртка зеленая",
+      price: 79.99,
+      images: ["nastya7.jpeg", "nastya8.jpeg", "nastya9.jpeg"],
+    },
+    {
+      id: 4,
+      name: "Куртка синяя",
+      price: 69.99,
+      images: ["nastya10.jpeg", "nastya11.jpeg", "nastya12.jpeg"],
+    },
+    {
+      id: 5,
+      name: "Куртка бежевая",
+      price: 119.99,
+      images: ["nastya13.jpeg", "nastya14.jpeg", "nastya15.jpeg"],
+    },
+    {
+      id: 6,
+      name: "Куртка красная",
+      price: 109.99,
+      images: ["nastya16.jpeg", "nastya17.jpeg", "nastya18.jpeg"],
+    },
+    {
+      id: 7,
+      name: "Куртка серая",
+      price: 59.99,
+      images: ["nastya19.jpeg", "nastya20.jpeg", "nastya5.jpeg"],
+    },
+    {
+      id: 8,
+      name: "Куртка фиолетовая",
+      price: 89.99,
+      images: ["nastya7.jpeg", "nastya8.jpeg", "nastya3.jpeg"],
+    },
+  ]);
+
+  const [cart, setCart] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
-    const fetchNewProducts = async () => {
-      try {
-        const response = await fetch("https://shop-production-3be1.up.railway.app/api/products/new");
-
-        if (!response.ok) {
-          console.error("Ошибка на сервере:", response.status, response.statusText);
-          throw new Error('Ошибка при загрузке данных с сервера');
-        }
-
-        const data = await response.json();
-        setNewProducts(data); // Сохраняем данные продуктов в состояние
-      } catch (err) {
-        console.error("Ошибка при запросе данных:", err);
-        setError("Не удалось загрузить новые продукты.");
-      }
-    };
-
-    fetchNewProducts(); // Вызываем функцию при монтировании компонента
+    const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setCart(savedCart);
   }, []);
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 50, scale: 0.9 }, // Начальное состояние (невидимо, смещено вниз и уменьшено)
-    visible: { opacity: 1, y: 0, scale: 1 }, // Конечное состояние (видимо, на месте и нормального размера)
-  };
-
-  const buttonVariants = {
-    hover: { scale: 1.05, backgroundColor: "#dc2626" }, // Эффект при наведении
-    tap: { scale: 0.95 }, // Эффект при нажатии
-  };
-
-  const titleVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+  const addToCart = (product) => {
+    setCart((prevCart) => {
+      const updatedCart = [...prevCart, product];
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      return updatedCart;
+    });
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-10">
+    <div className="min-h-screen bg-white text-black p-10 relative font-[Space Grotesk]">
+      <div className="fixed inset-0 flex justify-between items-start sm:flex-col md:flex-row p-6 pointer-events-none">
+        <a
+          href="/new"
+          className="fixed top-5 left-5 sm:top-1 sm:left-1 text-black text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto"
+        >
+          NEW
+        </a>
+        <a
+          href="#"
+          className="fixed top-5 right-5 sm:top-1 sm:right-1 text-black text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto"
+        >
+          BIO
+        </a>
+        <a
+          href="#"
+          className="fixed bottom-5 right-5 sm:bottom-1 sm:right-1 text-black text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto"
+        >
+          SALE
+        </a>
+        <a
+          href="/profile"
+          className="fixed bottom-5 left-5 sm:bottom-1 sm:left-1 text-black text-xl font-bold uppercase tracking-widest hover:underline pointer-events-auto"
+        >
+          MY ACCOUNT
+        </a>
+      </div>
+
       <motion.h1
-        className="text-4xl font-bold text-center mb-10"
-        variants={titleVariants}
-        initial="hidden"
-        animate="visible"
+        className="text-6xl font-bold text-left mb-16 tracking-tight mt-20"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
       >
         New Collection
       </motion.h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {error && <p className="text-center text-red-500">{error}</p>}
-        {newProducts.length > 0 ? (
-          newProducts.map((product, index) => (
-            <motion.div
-              key={product.id}
-              variants={cardVariants}
-              initial="hidden"
-              animate="visible"
-              transition={{ delay: index * 0.1, duration: 0.5 }} // Задержка и длительность анимации
-              className="bg-gray-800 p-4 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow"
-              whileHover={{ scale: 1.05 }} // Эффект при наведении на карточку
-            >
-              <Image
-                src={product.image}
-                alt={product.name}
-                width={400}
-                height={500}
-                className="object-cover w-full h-64 rounded-md"
-              />
-              <h2 className="text-xl font-semibold mt-4">{product.name}</h2>
-              <p className="text-gray-400">€{product.price}</p>
+      <div className="fixed top-6 left-1/2 transform -translate-x-1/2 flex items-center cursor-pointer" onClick={() => router.push('/cart')}>
+        <ShoppingCart size={32} className="text-black" />
+        {cart.length > 0 && (
+          <span className="ml-2 bg-red-600 text-white px-2 py-1 rounded-full text-sm font-bold">
+            {cart.length}
+          </span>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+        {newProducts.map((product, index) => (
+          <motion.div
+            key={product.id}
+            className="relative flex flex-col items-start gap-4"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1, duration: 0.5 }}
+          >
+            <Carousel showThumbs={false} showStatus={false} infiniteLoop={true} className="w-full aspect-[4/5]">
+              {product.images.map((img, i) => (
+                <div key={i} className="relative w-full h-full overflow-hidden">
+                  <Image
+                    src={`/images/${img}`}
+                    alt={product.name}
+                    width={400}
+                    height={500}
+                    className="object-cover"
+                  />
+                </div>
+              ))}
+            </Carousel>
+            <h2 className="text-2xl font-semibold">{product.name}</h2>
+            <p className="text-lg text-gray-600">€{product.price}</p>
+            <div className="flex gap-4 mt-2">
               <motion.button
-                className="mt-4 bg-red-600 px-4 py-2 rounded-md hover:bg-red-700 transition w-full"
+                className="border border-black px-6 py-2 text-lg font-medium tracking-wide hover:bg-black hover:text-white transition-all"
                 onClick={() => router.push(`/product/${product.id}`)}
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 Подробнее
               </motion.button>
-            </motion.div>
-          ))
-        ) : (
-          <motion.p
-            className="text-center text-gray-400"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            Загрузка товаров...
-          </motion.p>
-        )}
+              <motion.button
+                className="border border-gray-500 px-6 py-2 text-lg text-gray-600 font-medium tracking-wide hover:bg-gray-800 hover:text-white transition-all"
+                onClick={() => addToCart(product)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                В корзину
+              </motion.button>
+            </div>
+          </motion.div>
+        ))}
       </div>
     </div>
   );

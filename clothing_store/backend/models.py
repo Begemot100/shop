@@ -11,6 +11,8 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     image = db.Column(db.String(255), nullable=True)
     is_new = db.Column(db.Boolean, default=False)
+    image2 = db.Column(db.String(255), nullable=True)
+    image3 = db.Column(db.String(255), nullable=True)
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)

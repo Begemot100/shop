@@ -1,19 +1,16 @@
 export async function POST(req) {
-    try {
-        const { name, email, password } = await req.json();
+  try {
+    const { name, email, password } = await req.json();
 
-         const response = await fetch("https://shop-production-3be1.up.railway.app/api/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, password }),
-        });
-        const data = await response.json();
-        return new Response(JSON.stringify(data), { status: response.status });
-    } catch (error) {
-        console.error("Ошибка при регистрации:", error);
-        return new Response(
-            JSON.stringify({ message: "Ошибка сервера" }),
-            { status: 500 }
-        );
+    if (!name || !email || !password) {
+      return new Response(JSON.stringify({ error: "Все поля обязательны" }), { status: 400 });
     }
+
+    // Пример фейкового сохранения пользователя (замени на свою логику)
+    const newUser = { name, email, password };
+
+    return new Response(JSON.stringify(newUser), { status: 200 });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: "Ошибка сервера" }), { status: 500 });
+  }
 }

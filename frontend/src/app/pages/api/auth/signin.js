@@ -1,8 +1,11 @@
 // /pages/auth/signin.js
 
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/router"; // Для навигации
 
 export default function SignIn() {
+  const router = useRouter(); // Используем useRouter для навигации
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const email = event.target.email.value;
@@ -17,7 +20,7 @@ export default function SignIn() {
     if (result.error) {
       alert("Ошибка входа");
     } else {
-      window.location.href = "/dashboard";  // Перенаправление после успешного входа
+      router.push("/products"); // Перенаправление на страницу товаров
     }
   };
 

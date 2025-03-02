@@ -11,8 +11,12 @@ from models import User, Product, ActivityLog, db
 app = Flask(__name__)
 
 # Конфигурация для PostgreSQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:gYYcSjYNpYYvpmNvsMaVgpnSupkjrhzS@nozomi.proxy.rlwy.net:47023/railway'
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:gYYcSjYNpYYvpmNvsMaVgpnSupkjrhzS@nozomi.proxy.rlwy.net:47023/railway'
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(BASE_DIR, 'instance', 'store.db')}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 app.config['SECRET_KEY'] = '5005'  # Для безопасности
 
 # Инициализация необходимых расширений
@@ -152,8 +156,10 @@ def get_new_products():
                 'id': product.id,
                 'name': product.name,
                 'price': product.price,
-                'image': product.image,
-                'is_new': product.is_new
+                'image': f"/images/{product.image}",  # Путь к первому изображению
+                'image2': f"/images/{product.image2}" if product.image2 else None,  # Путь ко второму изображению
+                'image3': f"/images/{product.image3}" if product.image3 else None,  # Путь к третьему изображению
+                'is_new': product.is_new,
             })
 
         if not products:
@@ -172,4 +178,4 @@ def load_user(user_id):
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(debug=True, port=8080)
+    app.run(debug=True, port=5001)
