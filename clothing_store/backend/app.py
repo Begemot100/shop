@@ -106,6 +106,15 @@ def logout():
     logout_user()
     return jsonify({"message": "Вы вышли из системы"}), 200
 
+@app.route('/api/auth/session', methods=['GET'])
+@login_required  # Убедитесь, что только авторизованные пользователи могут получить доступ к сессии
+def get_session():
+    return jsonify({
+        'user_id': current_user.id,
+        'user_email': current_user.email,
+        'message': 'Session active'
+    }), 200
+
 # Панель администратора
 @app.route("/admin")
 @login_required
@@ -162,4 +171,4 @@ def load_user(user_id):
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=8080)
