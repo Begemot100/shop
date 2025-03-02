@@ -73,6 +73,33 @@ def login():
     else:
         return jsonify({"error": "Неверный email или пароль"}), 401
 
+
+@app.route('/api/auth/_log', methods=['POST'])
+def log_activity():
+    try:
+        # Получаем данные из запроса
+        data = request.get_json()
+        print("📝 Логирование активности:", data)  # Выводим данные в консоль
+
+        # Проверяем, что все необходимые поля присутствуют
+        if not data or not data.get("user_id") or not data.get("action"):
+            return jsonify({"error": "Отсутствуют обязательные поля: user_id или action"}), 400
+
+        # Сохраняем лог в базе данных
+        log_entry = ActivityLog(user_id=data["user_id"], action=data["action"])
+        db.session.add(log_entry)
+        db.session.commit()
+
+        print(f"✅ Лог активности добавлен для пользователя {data['user_id']}")
+
+        # Возвращаем успешный ответ
+        return jsonify({"message": "Логирование выполнено успешно"}), 200
+
+    except Exception as e:
+        print(f"❌ Ошибка при логировании: {str(e)}")
+        return jsonify({"error": "Ошибка сервера"}), 500
+
+
 # Логаут
 @app.route("/logout")
 @login_required
