@@ -42,17 +42,24 @@ export default function NewCollection() {
         headers: { "Content-Type": "application/json" },
       });
 
+      // Проверяем, если сервер вернул успешный статус
       if (!response.ok) {
         console.error("Ошибка на сервере:", response.status, response.statusText);
-        return;
+        return null; // Возвращаем null в случае ошибки
       }
 
       const data = await response.json();
-      console.log("Данные с сервера:", data);
-      return data;
+
+      // Убедимся, что данные пришли в правильном формате
+      if (Array.isArray(data)) {
+        return data;
+      } else {
+        console.error("Неверный формат данных", data);
+        return null;
+      }
     } catch (error) {
       console.error("Ошибка сети:", error);
-      return null;
+      return null; // Возвращаем null в случае ошибки сети
     }
   };
 
