@@ -42,19 +42,25 @@ export default function NewCollection() {
         headers: { "Content-Type": "application/json" },
       });
 
-      // Проверяем, если сервер вернул успешный статус
+      // Проверка успешности ответа
       if (!response.ok) {
-        console.error("Ошибка на сервере:", response.status, response.statusText);
-        return null; // Возвращаем null в случае ошибки
+        console.error(`Ошибка на сервере: ${response.status} - ${response.statusText}`);
+        return null;
       }
 
-      const data = await response.json();
+      // Попытка получить данные в формате JSON
+      try {
+        const data = await response.json();
 
-      // Убедимся, что данные пришли в правильном формате
-      if (Array.isArray(data)) {
-        return data;
-      } else {
-        console.error("Неверный формат данных", data);
+        // Проверка на корректность данных
+        if (Array.isArray(data)) {
+          return data;
+        } else {
+          console.error("Неверный формат данных:", data);
+          return null;
+        }
+      } catch (error) {
+        console.error("Ошибка при парсинге JSON:", error);
         return null;
       }
     } catch (error) {
