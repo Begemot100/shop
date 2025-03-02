@@ -1,10 +1,7 @@
-from flask import app
-from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 
-db = SQLAlchemy()  # ✅ Определяем `db`, но не связываем с `app`
-# migrate = Migrate(app, db)  # 🔥 Подключаем Flask-Migrate
+db = SQLAlchemy()  # Инициализация базы данных
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -27,4 +24,3 @@ class Admin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-
